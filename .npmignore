@@ -1,0 +1,38 @@
+# Development files
+node_modules/
+src/
+tests/
+coverage/
+*.log
+
+# Build configs
+vite.config.ts
+vitest.config.ts
+tsconfig.json
+.pnpm-lock.yaml
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Git
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Spec
+.trae/
+
+# Temporary
+tmp/
+temp/
+*.tmp

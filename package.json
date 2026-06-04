@@ -1,0 +1,125 @@
+{
+  "name": "atomix",
+  "version": "0.1.0",
+  "description": "轻量、模块化、零依赖的 TypeScript 前端工具库",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./type": {
+      "import": "./dist/type/index.mjs",
+      "require": "./dist/type/index.cjs",
+      "types": "./dist/type/index.d.ts"
+    },
+    "./string": {
+      "import": "./dist/string/index.mjs",
+      "require": "./dist/string/index.cjs",
+      "types": "./dist/string/index.d.ts"
+    },
+    "./array": {
+      "import": "./dist/array/index.mjs",
+      "require": "./dist/array/index.cjs",
+      "types": "./dist/array/index.d.ts"
+    },
+    "./object": {
+      "import": "./dist/object/index.mjs",
+      "require": "./dist/object/index.cjs",
+      "types": "./dist/object/index.d.ts"
+    },
+    "./number": {
+      "import": "./dist/number/index.mjs",
+      "require": "./dist/number/index.cjs",
+      "types": "./dist/number/index.d.ts"
+    },
+    "./date": {
+      "import": "./dist/date/index.mjs",
+      "require": "./dist/date/index.cjs",
+      "types": "./dist/date/index.d.ts"
+    },
+    "./browser": {
+      "import": "./dist/browser/index.mjs",
+      "require": "./dist/browser/index.cjs",
+      "types": "./dist/browser/index.d.ts"
+    },
+    "./url": {
+      "import": "./dist/url/index.mjs",
+      "require": "./dist/url/index.cjs",
+      "types": "./dist/url/index.d.ts"
+    },
+    "./validate": {
+      "import": "./dist/validate/index.mjs",
+      "require": "./dist/validate/index.cjs",
+      "types": "./dist/validate/index.d.ts"
+    },
+    "./file": {
+      "import": "./dist/file/index.mjs",
+      "require": "./dist/file/index.cjs",
+      "types": "./dist/file/index.d.ts"
+    },
+    "./math": {
+      "import": "./dist/math/index.mjs",
+      "require": "./dist/math/index.cjs",
+      "types": "./dist/math/index.d.ts"
+    },
+    "./color": {
+      "import": "./dist/color/index.mjs",
+      "require": "./dist/color/index.cjs",
+      "types": "./dist/color/index.d.ts"
+    },
+    "./fp": {
+      "import": "./dist/fp/index.mjs",
+      "require": "./dist/fp/index.cjs",
+      "types": "./dist/fp/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "prebuild": "npm run clean",
+    "clean": "rimraf dist",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "npm run build && npm run test",
+    "publish:local": "npm publish --access=public",
+    "link": "npm link"
+  },
+  "keywords": [
+    "util",
+    "utils",
+    "toolkit",
+    "atomix",
+    "frontend",
+    "typescript",
+    "helpers",
+    "functions"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/buzzinhc/atomix.git"
+  },
+  "homepage": "https://github.com/buzzinhc/atomix",
+  "bugs": {
+    "url": "https://github.com/buzzinhc/atomix/issues"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "rimraf": "^6.0.1",
+    "typescript": "^5.4.0",
+    "vite": "^5.4.0",
+    "vite-plugin-dts": "^4.0.0",
+    "vitest": "^2.0.0"
+  }
+}
