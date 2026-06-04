@@ -1,6 +1,6 @@
-# 📦 atomix 发布指南
+# 📦 atomix-fe 发布指南
 
-准备好了！atomix 现在可以上传到 npm 了~ ✨
+准备好了！atomix-fe 现在可以上传到 npm 了~ ✨
 
 ## 📋 发布前检查清单
 
@@ -55,22 +55,22 @@ npm link
 
 # 在另一个项目目录中测试
 cd /path/to/test-project
-npm link atomix
+npm link atomix-fe
 ```
 
 然后在测试项目里：
 
 ```typescript
-import { debounce, uuid } from 'atomix'
+import { debounce, uuid } from 'atomix-fe'
 ```
 
 测试完成后取消 link：
 
 ```bash
 # 在测试项目
-npm unlink atomix
+npm unlink atomix-fe
 
-# 在 atomix 项目
+# 在 atomix-fe 项目
 npm unlink
 ```
 
@@ -108,18 +108,18 @@ npm publish --access=public
 
 ## ⚠️ 注意事项
 
-1. **包名唯一性**：发布前先去 npm 上搜索一下 `atomix` 有没有被占用
+1. **包名唯一性**：发布前先去 npm 上搜索一下 `atomix-fe` 有没有被占用
 2. **私有仓库**：如果是发布到自己的私有仓库，设置好 npm registry
 3. **版本号管理**：同一个版本号只能发布一次，想要更新必须提升版本号
 4. **`--access=public`**：如果是组织下的私有包，不需要这个参数
 
 ## 🌰 自定义包名
 
-如果 `atomix` 被占用，可以改成这样的格式：
+如果 `atomix-fe` 被占用，可以改成这样的格式：
 
 ```json
 {
-  "name": "@your-username/atomix"
+  "name": "@your-username/atomix-fe"
 }
 ```
 

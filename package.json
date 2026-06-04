@@ -1,5 +1,5 @@
 {
-  "name": "atomix",
+  "name": "atomix-fe",
   "version": "0.1.0",
   "description": "轻量、模块化、零依赖的 TypeScript 前端工具库",
   "type": "module",

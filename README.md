@@ -13,19 +13,19 @@
 ## 安装
 
 ```bash
-npm install
+npm install atomix-fe
 ```
 
 ## 快速开始
 
 ```typescript
 // 引入全部函数
-import { debounce, formatDate, isEmail, deepClone } from 'atomix'
+import { debounce, formatDate, isEmail, deepClone } from 'atomix-fe'
 
 // 按需引入（推荐）
-import { debounce } from 'atomix/browser'
-import { formatDate } from 'atomix/date'
-import { isEmail } from 'atomix/validate'
+import { debounce } from 'atomix-fe/browser'
+import { formatDate } from 'atomix-fe/date'
+import { isEmail } from 'atomix-fe/validate'
 ```
 
 ---
@@ -37,7 +37,7 @@ import { isEmail } from 'atomix/validate'
 类型判断工具，处理各种值类型的判断~
 
 ```typescript
-import { isString, isArray, isEmpty, getType } from 'atomix/type'
+import { isString, isArray, isEmpty, getType } from 'atomix-fe/type'
 
 isString('hello')           // true
 isString(123)               // false
@@ -73,7 +73,7 @@ getType(/abc/)              // 'RegExp'
 字符串格式化与转换工具~
 
 ```typescript
-import { camelCase, kebabCase, truncate, uuid } from 'atomix/string'
+import { camelCase, kebabCase, truncate, uuid } from 'atomix-fe/string'
 
 camelCase('hello-world')     // 'helloWorld'
 camelCase('hello_world')    // 'helloWorld'
@@ -109,7 +109,7 @@ unescapeHtml('&lt;div&gt;')  // '<div>'
 强大的数组处理工具，让数据操作更简单~
 
 ```typescript
-import { unique, chunk, groupBy, shuffle } from 'atomix/array'
+import { unique, chunk, groupBy, shuffle } from 'atomix-fe/array'
 
 unique([1, 2, 2, 3, 3, 3])  // [1, 2, 3]
 chunk([1, 2, 3, 4, 5], 2)   // [[1, 2], [3, 4], [5]]
@@ -153,7 +153,7 @@ last([1, 2, 3])                 // 3
 对象处理神器，深度操作无压力~
 
 ```typescript
-import { deepClone, deepMerge, pick, get, set } from 'atomix/object'
+import { deepClone, deepMerge, pick, get, set } from 'atomix-fe/object'
 
 deepClone({ a: { b: 1 } })           // 完全独立的深拷贝
 deepMerge({ a: 1 }, { a: 2, b: 3 }) // { a: 2, b: 3 }
@@ -187,7 +187,7 @@ invert({ a: 'x', b: 'y' })           // { x: 'a', y: 'b' }
 数字计算与格式化工具~
 
 ```typescript
-import { clamp, formatNumber, random, percentage } from 'atomix/number'
+import { clamp, formatNumber, random, percentage } from 'atomix-fe/number'
 
 clamp(10, 0, 5)                    // 5
 clamp(-5, 0, 10)                   // 0
@@ -220,7 +220,7 @@ percentage(1, 3, 2)                // 33.33
 日期处理与格式化工具~
 
 ```typescript
-import { formatDate, timeAgo, addDays, isToday } from 'atomix/date'
+import { formatDate, timeAgo, addDays, isToday } from 'atomix-fe/date'
 
 formatDate(new Date('2024-01-15T10:30:00'))
 // '2024-01-15 10:30:00'
@@ -261,7 +261,7 @@ getDaysInMonth(2024, 2)            // 29 (闰年二月)
 浏览器/DOM 相关工具，处理常见的浏览器操作~
 
 ```typescript
-import { debounce, throttle, copyToClipboard, isMobile } from 'atomix/browser'
+import { debounce, throttle, copyToClipboard, isMobile } from 'atomix-fe/browser'
 
 // 防抖
 const debouncedFn = debounce(() => {
@@ -321,7 +321,7 @@ getScrollPosition()  // { x: 0, y: 100 }
 URL 解析与处理工具~
 
 ```typescript
-import { parseQuery, stringifyQuery, parseUrl } from 'atomix/url'
+import { parseQuery, stringifyQuery, parseUrl } from 'atomix-fe/url'
 
 parseQuery('name=tom&age=18')
 // { name: 'tom', age: '18' }
@@ -359,7 +359,7 @@ isAbsoluteUrl('/api/users')           // false
 常见数据格式校验工具，表单验证好帮手~
 
 ```typescript
-import { isEmail, isPhone, isIdCard, isStrongPassword } from 'atomix/validate'
+import { isEmail, isPhone, isIdCard, isStrongPassword } from 'atomix-fe/validate'
 
 isEmail('test@example.com')         // true
 isEmail('invalid-email')             // false
@@ -410,7 +410,7 @@ isStrongPassword('abc123')           // false (缺大写和特殊字符)
 文件处理与下载工具~
 
 ```typescript
-import { downloadFile, formatFileSize, isImage, getFileExtension } from 'atomix/file'
+import { downloadFile, formatFileSize, isImage, getFileExtension } from 'atomix-fe/file'
 
 downloadFile('hello world', 'test.txt', 'text/plain')
 
@@ -447,7 +447,7 @@ const dataUrl = await readFileAsDataURL(file)
 数学计算与三角函数工具，动画开发必备~
 
 ```typescript
-import { radian, sin, gcd, factorial, lerp, map, easeInOut } from 'atomix/math'
+import { radian, sin, gcd, factorial, lerp, map, easeInOut } from 'atomix-fe/math'
 
 radian(180)                // 3.141592653589793 (π)
 degree(Math.PI)            // 180
@@ -493,7 +493,7 @@ nearestPowerOfTwo(10)     // 8
 颜色转换与操作工具，设计开发必备~
 
 ```typescript
-import { hexToRgb, rgbToHex, parseColor, lighten, darken, mix } from 'atomix/color'
+import { hexToRgb, rgbToHex, parseColor, lighten, darken, mix } from 'atomix-fe/color'
 
 hexToRgb('#FF6B35')           // { r: 255, g: 107, b: 53 }
 rgbToHex(255, 107, 53)       // '#FF6B35'
@@ -543,7 +543,7 @@ mix('#FF0000', '#0000FF', 0.5)  // 混合颜色
 函数式编程工具，让代码更优雅~
 
 ```typescript
-import { compose, pipe, curry, memoize, once } from 'atomix/fp'
+import { compose, pipe, curry, memoize, once } from 'atomix-fe/fp'
 
 // 组合函数
 const add1 = (x: number) => x + 1
