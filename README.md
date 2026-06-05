@@ -607,6 +607,42 @@ init()                       // true (不再执行)
 
 ---
 
+### promise Promise 工具
+
+Promise 工具函数，简化异步操作~
+
+```typescript
+import { delay, timeout, retry, all, race, promisify } from 'atomix-fe/promise'
+
+await delay(1000)                    // 延迟1秒
+await timeout(fetchData(), 5000)     // 5秒超时
+await retry(fetchData, 3)            // 最多重试3次
+await all([promise1, promise2])      // 等待所有完成
+await race([promise1, promise2])     // 等待第一个完成
+
+const readFileAsync = promisify(fs.readFile)
+await readFileAsync('file.txt')
+```
+
+| 函数 | 说明 | 示例 |
+|------|------|------|
+| `delay` | 延迟执行 | `delay(1000)` → 延迟1秒 |
+| `timeout` | 超时控制 | `timeout(promise, 5000)` → 5秒超时 |
+| `retry` | 重试机制 | `retry(fn, 3)` → 最多重试3次 |
+| `all` | 等待全部 | `all([p1, p2])` |
+| `allSettled` | 全部完成(含失败) | `allSettled([p1, p2])` |
+| `race` | 竞态 | 等待第一个完成 |
+| `any` | 任意成功 | 等待第一个成功 |
+| `promisify` | 回调转Promise | `promisify(fs.readFile)` |
+| `debouncePromise` | 防抖(异步版) | 延迟执行异步函数 |
+| `throttlePromise` | 节流(异步版) | 间隔执行异步函数 |
+| `waterfall` | 瀑布流 | 顺序执行，前一个输出作为后一个输入 |
+| `parallelLimit` | 并发限制 | 限制同时执行的Promise数量 |
+| `withRetry` | 智能重试 | 支持指数退避和回调 |
+| `toAsyncIterable` | 转异步迭代器 | 将Promise转为AsyncIterable |
+
+---
+
 ## 脚本命令
 
 ```bash
