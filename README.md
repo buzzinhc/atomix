@@ -5,9 +5,10 @@
 ## 特性
 
 - **零外部依赖** - 纯 TypeScript 实现，无运行时依赖
-- **模块化设计** - 13 大功能模块，按需引入，Tree-shaking 友好
+- **模块化设计** - 16 大功能模块，按需引入，Tree-shaking 友好
 - **类型安全** - 完整的 TypeScript 类型定义
-- **测试完备** - 500+ 个测试用例，覆盖全面
+- **测试完备** - 700+ 个测试用例，覆盖全面
+- **自动发布** - GitHub Actions CI/CD，创建 Release 自动发布到 npm
 - **多格式输出** - 支持 ESM、CJS、UMD 三种模块格式
 
 ## 安装
@@ -734,6 +735,45 @@ export * from './myFunc'  // 添加这行
 // src/index.ts
 export * from './string'  // 已经有了，会自动包含
 ```
+
+## 发布指南
+
+本项目使用 GitHub Actions 自动发布到 npm，流程如下：
+
+### 1. 提交代码
+
+```bash
+git add -A
+git commit -m "feat: 新增 xxx 功能"
+```
+
+### 2. 更新版本号
+
+```bash
+npm version patch   # 0.3.0 → 0.3.1  (bug 修复)
+npm version minor   # 0.3.0 → 0.4.0  (新功能)
+npm version major   # 0.3.0 → 1.0.0  (破坏性变更)
+```
+
+### 3. 推送代码和 Tag
+
+```bash
+git push origin main --tags
+```
+
+### 4. 创建 Release（触发自动发布）
+
+1. 打开 [GitHub Releases](https://github.com/buzzinhc/atomix/releases/new)
+2. 选择刚推送的 tag（如 `v0.4.0`）
+3. 填写 Release 标题和更新说明
+4. 点击 **Publish release**
+
+> GitHub Actions 会自动执行：测试 → 构建 → 发布到 npm
+
+### 首次配置
+
+在仓库 Settings → Secrets and variables → Actions 中添加：
+- `NPM_TOKEN`：npm Automation token（从 [npmjs.com/settings/tokens](https://www.npmjs.com/settings/tokens) 创建）
 
 ---
 
