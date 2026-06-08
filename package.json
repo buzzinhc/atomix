@@ -1,6 +1,6 @@
 {
   "name": "atomix-fe",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "轻量、模块化、零依赖的 TypeScript 前端工具库",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -81,6 +81,11 @@
       "import": "./dist/promise/index.mjs",
       "require": "./dist/promise/index.cjs",
       "types": "./dist/promise/index.d.ts"
+    },
+    "./event": {
+      "import": "./dist/event/index.mjs",
+      "require": "./dist/event/index.cjs",
+      "types": "./dist/event/index.d.ts"
     }
   },
   "files": [
