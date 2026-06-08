@@ -643,6 +643,54 @@ await readFileAsync('file.txt')
 
 ---
 
+### event 事件总线
+
+事件发布/订阅工具，简化组件间通信~
+
+```typescript
+import { EventEmitter, eventBus, createEmitter } from 'atomix-fe/event'
+
+// 使用全局事件总线
+eventBus.on('user:login', (data) => {
+  console.log('用户登录:', data)
+})
+eventBus.emit('user:login', { userId: 123 })
+
+// 创建独立的事件发射器
+const emitter = new EventEmitter()
+emitter.on('click', (e) => console.log('点击:', e))
+emitter.emit('click', { x: 100, y: 200 })
+
+// 一次性事件监听
+emitter.once('init', (data) => console.log('初始化:', data))
+
+// 移除监听
+const unsubscribe = emitter.on('update', handler)
+unsubscribe() // 取消订阅
+```
+
+| 函数/类 | 说明 | 示例 |
+|--------|------|------|
+| `EventEmitter` | 事件发射器类 | `new EventEmitter()` |
+| `eventBus` | 全局事件总线 | 单例，跨模块通信 |
+| `createEmitter` | 创建类型化发射器 | 基于接口定义事件类型 |
+| `createOnceEmitter` | 创建一次性发射器 | 触发后自动清理 |
+
+**EventEmitter 方法：**
+
+| 方法 | 说明 | 示例 |
+|------|------|------|
+| `on(event, handler)` | 监听事件 | 返回取消订阅函数 |
+| `once(event, handler)` | 一次性监听 | 执行后自动移除 |
+| `off(event, handler)` | 移除监听 | |
+| `emit(event, data?)` | 触发事件 | |
+| `clear(event?)` | 清空监听 | 无参数清空全部 |
+| `listenerCount(event)` | 监听器数量 | |
+| `eventNames()` | 所有事件名 | |
+| `listeners(event)` | 获取监听器列表 | |
+
+---
+
 ## 脚本命令
 
 ```bash
