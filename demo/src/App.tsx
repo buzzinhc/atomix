@@ -25,6 +25,10 @@ import {
 import {
   EventEmitter,
 } from 'atomix-fe/event';
+import {
+  localStore,
+  sessionStore,
+} from 'atomix-fe/storage';
 
 const emitter = new EventEmitter();
 
@@ -32,14 +36,38 @@ export default function App() {
   const [inputText, setInputText] = useState('hello world');
   const [numberInput, setNumberInput] = useState(42);
   const [currentTime, setCurrentTime] = useState(Date.now());
+  const [storageData, setStorageData] = useState<string>('');
+  const [storageKeys, setStorageKeys] = useState<string[]>([]);
 
-  // 更新时间
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(Date.now());
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    setStorageKeys(localStore.keys());
+  }, []);
+
+  const handleStorageSet = () => {
+    const data = { id: Date.now(), value: storageData };
+    localStore.set('demoData', data);
+    setStorageKeys(localStore.keys());
+  };
+
+  const handleStorageGet = () => {
+    const data = localStore.get<{ id: number; value: string }>('demoData');
+    if (data) {
+      setStorageData(JSON.stringify(data));
+    }
+  };
+
+  const handleStorageRemove = () => {
+    localStore.remove('demoData');
+    setStorageKeys(localStore.keys());
+    setStorageData('');
+  };
 
   return (
     <div style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem' }}>
@@ -115,6 +143,20 @@ export default function App() {
         <h2 style={{ marginTop: 0 }}>Event (事件总线)</h2>
         <EventDemo emitter={emitter} />
       </section>
+
+      {/* Storage 模块 */}
+      <section style={{ marginBottom: '2rem', padding: '1.5rem', border: '1px solid #ddd', borderRadius: '8px' }}>
+        <h2 style={{ marginTop: 0 }}>Storage (本地存储)</h2>
+        <StorageDemo onUpdate={() => setStorageKeys(localStore.keys())} />
+        <div style={{ marginTop: '1rem' }}>
+          <h4>localStorage keys: {storageKeys.length}个</h4>
+          <ul style={{ background: '#f5f5f5', padding: '0.5rem', borderRadius: '4px', maxHeight: '100px', overflow: 'auto' }}>
+            {storageKeys.map((key) => (
+              <li key={key}>{key}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
     </div>
   );
 }
@@ -157,6 +199,57 @@ function EventDemo({ emitter }: { emitter: EventEmitter }) {
           ))}
         </ul>
       </div>
+    </div>
+  );
+}
+
+function StorageDemo({ onUpdate }: { onUpdate: () => void }) {
+  const [input, setInput] = useState('');
+  const [value, setValue] = useState<string | null>(null);
+
+  const handleSet = () => {
+    const data = { id: Date.now(), value: input };
+    localStore.set('demoData', data);
+    setInput('');
+    onUpdate();
+  };
+
+  const handleGet = () => {
+    const data = localStore.get<{ id: number; value: string }>('demoData');
+    setValue(data ? JSON.stringify(data) : 'null');
+  };
+
+  const handleRemove = () => {
+    localStore.remove('demoData');
+    setValue(null);
+    onUpdate();
+  };
+
+  return (
+    <div>
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="输入存储内容"
+          style={{ padding: '0.5rem', flex: 1 }}
+        />
+        <button onClick={handleSet} style={{ padding: '0.5rem 1rem', background: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          存储
+        </button>
+        <button onClick={handleGet} style={{ padding: '0.5rem 1rem', background: '#2196F3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          获取
+        </button>
+        <button onClick={handleRemove} style={{ padding: '0.5rem 1rem', background: '#f44336', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          删除
+        </button>
+      </div>
+      {value && (
+        <div style={{ background: '#e3f2fd', padding: '0.5rem', borderRadius: '4px' }}>
+          <strong>获取的值:</strong> {value}
+        </div>
+      )}
     </div>
   );
 }
