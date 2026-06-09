@@ -10,6 +10,7 @@ export * from './validate'
 export * from './file'
 export * from './promise'
 export * from './event'
+export * from './storage'
 export {
   radian, degree, sin, cos, tan, asin, acos, atan, atan2,
   pow, sqrt, cbrt, abs, floor, ceil, round, trunc, sign,
