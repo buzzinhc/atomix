@@ -1,6 +1,6 @@
 # atomix-fe 功能清单
 
-## 📦 版本：0.4.0
+## 📦 版本：0.4.2
 
 ---
 
@@ -142,6 +142,9 @@
 | removeQuery | 移除查询参数 | |
 | parseUrl | 解析 URL | 各组成部分 |
 | isAbsoluteUrl | 是否绝对路径 | 判断 http/https 等 |
+| getQueryParam | 获取指定查询参数 | getQueryParam('?a=1', 'a') → '1' |
+| setQueryParam | 设置/更新查询参数 | setQueryParam(url, 'a', '2') |
+| hasQueryParam | 是否包含指定参数 | 返回 boolean |
 
 ---
 

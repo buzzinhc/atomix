@@ -91,3 +91,37 @@ export function parseUrl(url: string): ParsedUrl {
 export function isAbsoluteUrl(url: string): boolean {
   return /^[a-z][a-z\d+\-.]*:/i.test(url) || url.startsWith('//')
 }
+
+export function getQueryParam(url: string, key: string): string | null {
+  const questionIdx = url.indexOf('?')
+  if (questionIdx == -1) return null
+  const hashIdx = url.indexOf('#', questionIdx)
+  const queryStr = url.slice(questionIdx + 1, hashIdx == -1 ? undefined : hashIdx)
+  if (!queryStr) return null
+  const params = parseQuery(queryStr)
+  return Object.prototype.hasOwnProperty.call(params, key) ? params[key] : null
+}
+
+export function setQueryParam(url: string, key: string, value: any): string {
+  const hashIdx = url.indexOf('#')
+  const hashStr = hashIdx == -1 ? '' : url.slice(hashIdx)
+  const baseWithoutHash = hashIdx == -1 ? url : url.slice(0, hashIdx)
+  const questionIdx = baseWithoutHash.indexOf('?')
+  let base: string
+  let params: Record<string, string>
+  if (questionIdx == -1) {
+    base = baseWithoutHash
+    params = {}
+  } else {
+    base = baseWithoutHash.slice(0, questionIdx)
+    params = parseQuery(baseWithoutHash.slice(questionIdx + 1))
+  }
+  params[key] = String(value)
+  const newQuery = stringifyQuery(params)
+  if (!newQuery) return `${base}${hashStr}`
+  return `${base}?${newQuery}${hashStr}`
+}
+
+export function hasQueryParam(url: string, key: string): boolean {
+  return getQueryParam(url, key) != null
+}

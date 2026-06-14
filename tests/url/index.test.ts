@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { parseQuery, stringifyQuery, addQuery, removeQuery, parseUrl, isAbsoluteUrl } from '../../src/url'
+import { parseQuery, stringifyQuery, addQuery, removeQuery, parseUrl, isAbsoluteUrl, getQueryParam, setQueryParam, hasQueryParam } from '../../src/url'
 
 describe('parseQuery', () => {
   it('parses basic query string', () => {
@@ -265,5 +265,94 @@ describe('isAbsoluteUrl', () => {
 
   it('returns false for hash-only string', () => {
     expect(isAbsoluteUrl('#section')).toBe(false)
+  })
+})
+
+describe('getQueryParam', () => {
+  it('returns value of specified key', () => {
+    expect(getQueryParam('https://example.com?a=1&b=2', 'a')).toBe('1')
+    expect(getQueryParam('https://example.com?a=1&b=2', 'b')).toBe('2')
+  })
+
+  it('returns null when key not present', () => {
+    expect(getQueryParam('https://example.com?a=1', 'b')).toBe(null)
+  })
+
+  it('returns null when no query string', () => {
+    expect(getQueryParam('https://example.com', 'a')).toBe(null)
+  })
+
+  it('handles URL-encoded values', () => {
+    expect(getQueryParam('https://example.com?name=%E4%B8%AD%E6%96%87', 'name')).toBe('中文')
+  })
+
+  it('handles value-less keys', () => {
+    expect(getQueryParam('https://example.com?a&b=2', 'a')).toBe('')
+  })
+
+  it('preserves hash and reads query before it', () => {
+    expect(getQueryParam('https://example.com?a=1&b=2#hash', 'a')).toBe('1')
+  })
+
+  it('returns empty string for empty value', () => {
+    expect(getQueryParam('https://example.com?a=&b=2', 'a')).toBe('')
+  })
+})
+
+describe('setQueryParam', () => {
+  it('adds new param to URL without query', () => {
+    expect(setQueryParam('https://example.com', 'a', '1')).toBe('https://example.com?a=1')
+  })
+
+  it('adds new param to URL with existing query', () => {
+    expect(setQueryParam('https://example.com?a=1', 'b', '2')).toBe('https://example.com?a=1&b=2')
+  })
+
+  it('updates existing param', () => {
+    expect(setQueryParam('https://example.com?a=1&b=2', 'a', '99')).toBe('https://example.com?a=99&b=2')
+  })
+
+  it('preserves hash fragment', () => {
+    expect(setQueryParam('https://example.com?a=1#section', 'b', '2')).toBe(
+      'https://example.com?a=1&b=2#section'
+    )
+  })
+
+  it('preserves hash when URL has no query', () => {
+    expect(setQueryParam('https://example.com#section', 'a', '1')).toBe(
+      'https://example.com?a=1#section'
+    )
+  })
+
+  it('encodes special characters', () => {
+    expect(setQueryParam('https://example.com', 'msg', 'hello world')).toBe(
+      'https://example.com?msg=hello%20world'
+    )
+  })
+
+  it('converts number to string', () => {
+    expect(setQueryParam('https://example.com', 'count', 42)).toBe('https://example.com?count=42')
+  })
+
+  it('converts boolean to string', () => {
+    expect(setQueryParam('https://example.com', 'active', true)).toBe('https://example.com?active=true')
+  })
+})
+
+describe('hasQueryParam', () => {
+  it('returns true when key exists', () => {
+    expect(hasQueryParam('https://example.com?a=1&b=2', 'a')).toBe(true)
+  })
+
+  it('returns false when key does not exist', () => {
+    expect(hasQueryParam('https://example.com?a=1', 'b')).toBe(false)
+  })
+
+  it('returns false when no query string', () => {
+    expect(hasQueryParam('https://example.com', 'a')).toBe(false)
+  })
+
+  it('returns true for empty value key', () => {
+    expect(hasQueryParam('https://example.com?a=&b=2', 'a')).toBe(true)
   })
 })

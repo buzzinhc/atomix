@@ -29,8 +29,15 @@ import {
   localStore,
   sessionStore,
 } from 'atomix-fe/storage';
+import {
+  getQueryParam,
+  setQueryParam,
+  hasQueryParam,
+} from 'atomix-fe/url';
 
 const emitter = new EventEmitter();
+
+const DEMO_URL = 'https://example.com/path?a=1&b=hello#section';
 
 export default function App() {
   const [inputText, setInputText] = useState('hello world');
@@ -156,6 +163,23 @@ export default function App() {
             ))}
           </ul>
         </div>
+      </section>
+
+      {/* URL 模块 */}
+      <section style={{ marginBottom: '2rem', padding: '1.5rem', border: '1px solid #ddd', borderRadius: '8px' }}>
+        <h2 style={{ marginTop: 0 }}>URL (URL 工具)</h2>
+        <div style={{ background: '#f5f5f5', padding: '0.5rem 1rem', borderRadius: '4px', marginBottom: '1rem', wordBreak: 'break-all' }}>
+          <strong>示例 URL：</strong> {DEMO_URL}
+        </div>
+        <ul style={{ lineHeight: '2' }}>
+          <li>getQueryParam(url, 'a'): {getQueryParam(DEMO_URL, 'a')}</li>
+          <li>getQueryParam(url, 'b'): {getQueryParam(DEMO_URL, 'b')}</li>
+          <li>getQueryParam(url, 'x'): {String(getQueryParam(DEMO_URL, 'x'))}</li>
+          <li>hasQueryParam(url, 'a'): {hasQueryParam(DEMO_URL, 'a') ? 'true' : 'false'}</li>
+          <li>hasQueryParam(url, 'x'): {hasQueryParam(DEMO_URL, 'x') ? 'true' : 'false'}</li>
+          <li style={{ wordBreak: 'break-all' }}>setQueryParam(url, 'c', 'new'): {setQueryParam(DEMO_URL, 'c', 'new')}</li>
+          <li style={{ wordBreak: 'break-all' }}>setQueryParam(url, 'a', '999'): {setQueryParam(DEMO_URL, 'a', '999')}</li>
+        </ul>
       </section>
     </div>
   );
