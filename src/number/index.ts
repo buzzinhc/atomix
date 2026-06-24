@@ -73,7 +73,7 @@ function getDecimals(num: number, mode: 'min' | 'max' | number, explicitDecimals
 
 export function formatCurrency(amount: number, options: FormatCurrencyOptions = {}): string {
   const { decimals: explicitDecimals, ...restOptions } = options
-  const opts = { ...defaultCurrencyOptions, ...restOptions }
+  const opts = { ...defaultCurrencyOptions, ...restOptions } as Required<FormatCurrencyOptions>
 
   const decimals = explicitDecimals !== undefined
     ? explicitDecimals
