@@ -1,6 +1,6 @@
 # atomix-fe 功能清单
 
-## 📦 版本：0.4.2
+## 📦 版本：0.5.0
 
 ---
 
@@ -89,6 +89,7 @@
 | random | 随机整数 | random(1, 100) → 1-100 随机整数 |
 | randomFloat | 随机浮点数 | 可指定精度 |
 | formatNumber | 千分位格式化 | formatNumber(1234567) → '1,234,567' |
+| formatCurrency | 货币格式化 | formatCurrency(1234) → '¥1,234.00' |
 | toFixed | 指定小数位 | 返回数字类型 |
 | sum | 求和 | sum(1, 2, 3, 4, 5) → 15 |
 | average | 求平均 | average(1, 2, 3) → 2 |

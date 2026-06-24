@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { clamp, random, randomFloat, formatNumber, toFixed, sum, average, percentage } from '../../src/number'
+import { clamp, random, randomFloat, formatNumber, toFixed, sum, average, percentage, formatCurrency } from '../../src/number'
 
 describe('clamp', () => {
   it('should return val when within range', () => {
@@ -160,5 +160,68 @@ describe('percentage', () => {
     const result = percentage(1, 3)
     expect(result).toBe(33)
     expect(Number.isInteger(result)).toBe(true)
+  })
+})
+
+describe('formatCurrency', () => {
+  it('should format with default options (¥ and 2 decimals)', () => {
+    expect(formatCurrency(1234567)).toBe('¥1,234,567.00')
+    expect(formatCurrency(1234.5)).toBe('¥1,234.50')
+    expect(formatCurrency(1000000)).toBe('¥1,000,000.00')
+  })
+
+  it('should format integer without decimals', () => {
+    expect(formatCurrency(100, { precision: 'min' })).toBe('¥100')
+    expect(formatCurrency(100.5, { precision: 'min' })).toBe('¥100.50')
+  })
+
+  it('should format with max precision', () => {
+    expect(formatCurrency(100)).toBe('¥100.00')
+    expect(formatCurrency(100.12345, { precision: 'max' })).toBe('¥100.12345')
+  })
+
+  it('should format with fixed decimals', () => {
+    expect(formatCurrency(100, { decimals: 0 })).toBe('¥100')
+    expect(formatCurrency(100.567, { decimals: 1 })).toBe('¥100.6')
+    expect(formatCurrency(100.567, { precision: 3 })).toBe('¥100.567')
+  })
+
+  it('should format with custom symbol', () => {
+    expect(formatCurrency(100, { symbol: '$' })).toBe('$100.00')
+    expect(formatCurrency(100, { symbol: '€' })).toBe('€100.00')
+    expect(formatCurrency(100, { symbol: 'USD ' })).toBe('USD 100.00')
+  })
+
+  it('should format with custom separator', () => {
+    expect(formatCurrency(1234567, { separator: ' ' })).toBe('¥1 234 567.00')
+    expect(formatCurrency(1234567, { separator: '.' })).toBe('¥1.234.567.00')
+  })
+
+  it('should format with custom decimal point', () => {
+    expect(formatCurrency(100.99, { decimalPoint: ',' })).toBe('¥100,99')
+  })
+
+  it('should handle zero', () => {
+    expect(formatCurrency(0)).toBe('¥0.00')
+    expect(formatCurrency(0, { precision: 'min' })).toBe('¥0')
+  })
+
+  it('should handle negative amounts', () => {
+    expect(formatCurrency(-1000)).toBe('¥-1,000.00')
+    expect(formatCurrency(-1234.56)).toBe('¥-1,234.56')
+  })
+
+  it('should handle small amounts', () => {
+    expect(formatCurrency(0.01)).toBe('¥0.01')
+    expect(formatCurrency(0.1)).toBe('¥0.10')
+  })
+
+  it('should handle large amounts', () => {
+    expect(formatCurrency(999999999)).toBe('¥999,999,999.00')
+  })
+
+  it('should round correctly', () => {
+    expect(formatCurrency(100.125, { decimals: 2 })).toBe('¥100.13')
+    expect(formatCurrency(100.124, { decimals: 2 })).toBe('¥100.12')
   })
 })
