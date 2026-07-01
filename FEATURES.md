@@ -1,6 +1,6 @@
 # atomix-fe 功能清单
 
-## 📦 版本：0.5.0
+## 📦 版本：0.6.0
 
 ---
 
@@ -130,6 +130,22 @@
 | getScrollPosition | 滚动位置 | { x: 0, y: 100 } |
 | isMobile | 是否移动设备 | 基于 userAgent |
 | getBrowserInfo | 浏览器信息 | { name: 'Chrome', version: '120' } |
+| lazyLoadImage | 图片懒加载 | 基于 IntersectionObserver，支持占位图/错误图 |
+| observeIntersection | 元素可见性观察 | 通用 IntersectionObserver 封装，返回清理函数 |
+
+**lazyLoadImage 选项：**
+
+| 选项 | 说明 | 默认值 |
+|------|------|--------|
+| root | 根元素 | null (视口) |
+| rootMargin | 根边距 | '0px' |
+| threshold | 可见性阈值 | 0.1 |
+| placeholder | 占位图地址 | '' |
+| errorImage | 加载失败显示图 | '' |
+| srcAttr | 真实图片地址属性 | 'data-src' |
+| srcsetAttr | 响应式图片地址属性 | 'data-srcset' |
+| onLoad | 加载成功回调 | - |
+| onError | 加载失败回调 | - |
 
 ---
 

@@ -172,3 +172,149 @@ export function getBrowserInfo(): { name: string; version: string } {
   }
   return { name, version }
 }
+
+export interface LazyLoadOptions {
+  root?: Element | null
+  rootMargin?: string
+  threshold?: number | number[]
+  placeholder?: string
+  errorImage?: string
+  srcAttr?: string
+  srcsetAttr?: string
+  onLoad?: (img: HTMLImageElement) => void
+  onError?: (img: HTMLImageElement) => void
+}
+
+export function lazyLoadImage(
+  images: HTMLImageElement | HTMLImageElement[] | string,
+  options: LazyLoadOptions = {}
+): () => void {
+  const {
+    root = null,
+    rootMargin = '0px',
+    threshold = 0.1,
+    placeholder = '',
+    errorImage = '',
+    srcAttr = 'data-src',
+    srcsetAttr = 'data-srcset',
+    onLoad,
+    onError,
+  } = options
+
+  let imageElements: HTMLImageElement[] = []
+
+  if (typeof images === 'string') {
+    imageElements = Array.from(document.querySelectorAll(images)) as HTMLImageElement[]
+  } else if (images instanceof HTMLImageElement) {
+    imageElements = [images]
+  } else {
+    imageElements = Array.from(images)
+  }
+
+  if (placeholder) {
+    imageElements.forEach((img) => {
+      if (!img.src && !img.getAttribute('src')) {
+        img.src = placeholder
+      }
+    })
+  }
+
+  if (typeof IntersectionObserver === 'undefined') {
+    imageElements.forEach((img) => {
+      loadImage(img, srcAttr, srcsetAttr, onLoad, onError, errorImage)
+    })
+    return () => {}
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const img = entry.target as HTMLImageElement
+          loadImage(img, srcAttr, srcsetAttr, onLoad, onError, errorImage)
+          observer.unobserve(img)
+        }
+      })
+    },
+    { root, rootMargin, threshold }
+  )
+
+  imageElements.forEach((img) => {
+    observer.observe(img)
+  })
+
+  return () => {
+    observer.disconnect()
+  }
+}
+
+function loadImage(
+  img: HTMLImageElement,
+  srcAttr: string,
+  srcsetAttr: string,
+  onLoad?: (img: HTMLImageElement) => void,
+  onError?: (img: HTMLImageElement) => void,
+  errorImage?: string
+): void {
+  const src = img.getAttribute(srcAttr)
+  const srcset = img.getAttribute(srcsetAttr)
+
+  if (!src && !srcset) return
+
+  const tempImg = new Image()
+
+  tempImg.onload = () => {
+    if (src) img.src = src
+    if (srcset) img.srcset = srcset
+    img.removeAttribute(srcAttr)
+    img.removeAttribute(srcsetAttr)
+    onLoad?.(img)
+  }
+
+  tempImg.onerror = () => {
+    if (errorImage) {
+      img.src = errorImage
+    }
+    onError?.(img)
+  }
+
+  if (src) tempImg.src = src
+  if (srcset) tempImg.srcset = srcset
+}
+
+export function observeIntersection(
+  target: Element | Element[] | string,
+  callback: (entry: IntersectionObserverEntry, observer: IntersectionObserver) => void,
+  options?: IntersectionObserverInit
+): () => void {
+  let elements: Element[] = []
+
+  if (typeof target === 'string') {
+    elements = Array.from(document.querySelectorAll(target))
+  } else if (target instanceof Element) {
+    elements = [target]
+  } else {
+    elements = Array.from(target)
+  }
+
+  if (typeof IntersectionObserver === 'undefined') {
+    elements.forEach((el) => {
+      callback({ isIntersecting: true, target: el } as IntersectionObserverEntry, {} as IntersectionObserver)
+    })
+    return () => {}
+  }
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach((entry) => {
+      callback(entry, obs)
+    })
+  }, options)
+
+  elements.forEach((el) => {
+    observer.observe(el)
+  })
+
+  return () => {
+    observer.disconnect()
+  }
+}

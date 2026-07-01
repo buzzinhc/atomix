@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   capitalize,
   camelCase,
@@ -34,6 +34,10 @@ import {
   setQueryParam,
   hasQueryParam,
 } from 'atomix-fe/url';
+import {
+  lazyLoadImage,
+  observeIntersection,
+} from 'atomix-fe/browser';
 
 const emitter = new EventEmitter();
 
@@ -181,6 +185,18 @@ export default function App() {
           <li style={{ wordBreak: 'break-all' }}>setQueryParam(url, 'a', '999'): {setQueryParam(DEMO_URL, 'a', '999')}</li>
         </ul>
       </section>
+
+      {/* Browser 模块 - 图片懒加载 */}
+      <section style={{ marginBottom: '2rem', padding: '1.5rem', border: '1px solid #ddd', borderRadius: '8px' }}>
+        <h2 style={{ marginTop: 0 }}>Browser (浏览器工具 - 图片懒加载)</h2>
+        <LazyLoadDemo />
+      </section>
+
+      {/* Browser 模块 - 元素可见性观察 */}
+      <section style={{ marginBottom: '2rem', padding: '1.5rem', border: '1px solid #ddd', borderRadius: '8px' }}>
+        <h2 style={{ marginTop: 0 }}>Browser (浏览器工具 - 元素可见性观察)</h2>
+        <IntersectionDemo />
+      </section>
     </div>
   );
 }
@@ -274,6 +290,137 @@ function StorageDemo({ onUpdate }: { onUpdate: () => void }) {
           <strong>获取的值:</strong> {value}
         </div>
       )}
+    </div>
+  );
+}
+
+function LazyLoadDemo() {
+  const imgRef = useRef<HTMLDivElement>(null);
+  const [loadedCount, setLoadedCount] = useState(0);
+
+  const images = [
+    { id: 1, color: 'FF6B6B', title: '图片 1' },
+    { id: 2, color: '4ECDC4', title: '图片 2' },
+    { id: 3, color: '45B7D1', title: '图片 3' },
+    { id: 4, color: '96CEB4', title: '图片 4' },
+    { id: 5, color: 'FFEAA7', title: '图片 5' },
+    { id: 6, color: 'DDA0DD', title: '图片 6' },
+  ];
+
+  useEffect(() => {
+    if (!imgRef.current) return;
+
+    const imgs = imgRef.current.querySelectorAll('img.lazy-img');
+    const cleanup = lazyLoadImage(imgs as NodeListOf<HTMLImageElement>, {
+      rootMargin: '50px',
+      threshold: 0.1,
+      placeholder: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZWVlIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5sb2FkaW5nLi4uPC90ZXh0Pjwvc3ZnPg==',
+      onLoad: () => setLoadedCount((c) => c + 1),
+    });
+
+    return cleanup;
+  }, []);
+
+  return (
+    <div>
+      <p style={{ marginBottom: '1rem', color: '#666' }}>
+        向下滚动查看懒加载效果，已加载：<strong>{loadedCount}</strong> / {images.length} 张
+      </p>
+      <div
+        ref={imgRef}
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+          gap: '1rem',
+          maxHeight: '400px',
+          overflow: 'auto',
+          padding: '1rem',
+          background: '#f9f9f9',
+          borderRadius: '4px',
+        }}
+      >
+        {images.map((img) => (
+          <div key={img.id} style={{ textAlign: 'center' }}>
+            <img
+              className="lazy-img"
+              data-src={`https://via.placeholder.com/300x200/${img.color}/ffffff?text=${img.title}`}
+              alt={img.title}
+              style={{ width: '100%', height: '120px', objectFit: 'cover', borderRadius: '4px', background: '#eee' }}
+            />
+            <p style={{ fontSize: '0.875rem', color: '#666', marginTop: '0.5rem' }}>{img.title}</p>
+          </div>
+        ))}
+      </div>
+      <p style={{ marginTop: '1rem', fontSize: '0.875rem', color: '#888' }}>
+        使用方法：<code>lazyLoadImage('.lazy-img', {'{'} rootMargin: '50px', onLoad: (img) => {'{'}...{'}'} {'}'})</code>
+      </p>
+    </div>
+  );
+}
+
+function IntersectionDemo() {
+  const targetRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [visibilityRatio, setVisibilityRatio] = useState(0);
+
+  useEffect(() => {
+    if (!targetRef.current) return;
+
+    const cleanup = observeIntersection(
+      targetRef.current,
+      (entry) => {
+        setIsVisible(entry.isIntersecting);
+        setVisibilityRatio(Math.round(entry.intersectionRatio * 100));
+      },
+      { threshold: [0, 0.25, 0.5, 0.75, 1] }
+    );
+
+    return cleanup;
+  }, []);
+
+  return (
+    <div>
+      <p style={{ marginBottom: '1rem', color: '#666' }}>
+        滚动下方区域，观察元素可见性变化：
+      </p>
+      <div
+        style={{
+          height: '200px',
+          overflow: 'auto',
+          border: '1px solid #ddd',
+          borderRadius: '4px',
+          padding: '1rem',
+          background: '#f9f9f9',
+        }}
+      >
+        <div style={{ height: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>
+          ⬆️ 向上滚动
+        </div>
+        <div
+          ref={targetRef}
+          style={{
+            padding: '2rem',
+            textAlign: 'center',
+            borderRadius: '8px',
+            transition: 'all 0.3s ease',
+            background: isVisible ? '#4CAF50' : '#f44336',
+            color: 'white',
+          }}
+        >
+          <h3 style={{ margin: '0 0 0.5rem 0' }}>
+            {isVisible ? '👀 元素可见' : '🙈 元素不可见'}
+          </h3>
+          <p style={{ margin: 0 }}>
+            可见比例：{visibilityRatio}%
+          </p>
+        </div>
+        <div style={{ height: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>
+          ⬇️ 向下滚动
+        </div>
+      </div>
+      <p style={{ marginTop: '1rem', fontSize: '0.875rem', color: '#888' }}>
+        使用方法：<code>observeIntersection(element, (entry) => {'{'}...{'}'}, {'{'} threshold: [0, 0.5, 1] {'}'})</code>
+      </p>
     </div>
   );
 }

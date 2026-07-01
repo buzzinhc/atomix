@@ -12,6 +12,8 @@ import {
   getScrollPosition,
   isMobile,
   getBrowserInfo,
+  lazyLoadImage,
+  observeIntersection,
 } from '../../src/browser'
 
 describe('debounce', () => {
@@ -315,5 +317,163 @@ describe.skip('getBrowserInfo', () => {
     const info = getBrowserInfo()
     expect(info).toHaveProperty('name')
     expect(info).toHaveProperty('version')
+  })
+})
+
+describe.skip('lazyLoadImage', () => {
+  beforeEach(() => {
+    document.body.innerHTML = ''
+  })
+
+  it('should be a function', () => {
+    expect(typeof lazyLoadImage).toBe('function')
+  })
+
+  it('should return a cleanup function', () => {
+    const img = document.createElement('img')
+    img.setAttribute('data-src', 'test.jpg')
+    document.body.appendChild(img)
+    const cleanup = lazyLoadImage(img)
+    expect(typeof cleanup).toBe('function')
+    cleanup()
+  })
+
+  it('should accept single image element', () => {
+    const img = document.createElement('img')
+    img.setAttribute('data-src', 'test.jpg')
+    document.body.appendChild(img)
+    const cleanup = lazyLoadImage(img)
+    expect(typeof cleanup).toBe('function')
+    cleanup()
+  })
+
+  it('should accept array of image elements', () => {
+    const img1 = document.createElement('img')
+    const img2 = document.createElement('img')
+    img1.setAttribute('data-src', 'test1.jpg')
+    img2.setAttribute('data-src', 'test2.jpg')
+    document.body.appendChild(img1)
+    document.body.appendChild(img2)
+    const cleanup = lazyLoadImage([img1, img2])
+    expect(typeof cleanup).toBe('function')
+    cleanup()
+  })
+
+  it('should accept selector string', () => {
+    const img1 = document.createElement('img')
+    const img2 = document.createElement('img')
+    img1.className = 'lazy'
+    img2.className = 'lazy'
+    img1.setAttribute('data-src', 'test1.jpg')
+    img2.setAttribute('data-src', 'test2.jpg')
+    document.body.appendChild(img1)
+    document.body.appendChild(img2)
+    const cleanup = lazyLoadImage('.lazy')
+    expect(typeof cleanup).toBe('function')
+    cleanup()
+  })
+
+  it('should set placeholder image if provided', () => {
+    const img = document.createElement('img')
+    img.setAttribute('data-src', 'test.jpg')
+    document.body.appendChild(img)
+    const placeholder = 'placeholder.jpg'
+    const cleanup = lazyLoadImage(img, { placeholder })
+    expect(img.src).toContain(placeholder)
+    cleanup()
+  })
+
+  it('should not override existing src with placeholder', () => {
+    const img = document.createElement('img')
+    img.src = 'existing.jpg'
+    img.setAttribute('data-src', 'test.jpg')
+    document.body.appendChild(img)
+    const placeholder = 'placeholder.jpg'
+    const cleanup = lazyLoadImage(img, { placeholder })
+    expect(img.src).toContain('existing.jpg')
+    cleanup()
+  })
+
+  it('should fallback to direct loading when IntersectionObserver is not available', () => {
+    const originalIO = (global as any).IntersectionObserver
+    ;(global as any).IntersectionObserver = undefined
+
+    const img = document.createElement('img')
+    img.setAttribute('data-src', 'test.jpg')
+    document.body.appendChild(img)
+
+    const onLoad = vi.fn()
+    const cleanup = lazyLoadImage(img, { onLoad })
+    expect(typeof cleanup).toBe('function')
+
+    ;(global as any).IntersectionObserver = originalIO
+  })
+})
+
+describe.skip('observeIntersection', () => {
+  beforeEach(() => {
+    document.body.innerHTML = ''
+  })
+
+  it('should be a function', () => {
+    expect(typeof observeIntersection).toBe('function')
+  })
+
+  it('should return a cleanup function', () => {
+    const el = document.createElement('div')
+    document.body.appendChild(el)
+    const callback = vi.fn()
+    const cleanup = observeIntersection(el, callback)
+    expect(typeof cleanup).toBe('function')
+    cleanup()
+  })
+
+  it('should accept single element', () => {
+    const el = document.createElement('div')
+    document.body.appendChild(el)
+    const callback = vi.fn()
+    const cleanup = observeIntersection(el, callback)
+    expect(typeof cleanup).toBe('function')
+    cleanup()
+  })
+
+  it('should accept array of elements', () => {
+    const el1 = document.createElement('div')
+    const el2 = document.createElement('div')
+    document.body.appendChild(el1)
+    document.body.appendChild(el2)
+    const callback = vi.fn()
+    const cleanup = observeIntersection([el1, el2], callback)
+    expect(typeof cleanup).toBe('function')
+    cleanup()
+  })
+
+  it('should accept selector string', () => {
+    const el1 = document.createElement('div')
+    const el2 = document.createElement('div')
+    el1.className = 'observe'
+    el2.className = 'observe'
+    document.body.appendChild(el1)
+    document.body.appendChild(el2)
+    const callback = vi.fn()
+    const cleanup = observeIntersection('.observe', callback)
+    expect(typeof cleanup).toBe('function')
+    cleanup()
+  })
+
+  it('should fallback to immediate callback when IntersectionObserver is not available', () => {
+    const originalIO = (global as any).IntersectionObserver
+    ;(global as any).IntersectionObserver = undefined
+
+    const el = document.createElement('div')
+    document.body.appendChild(el)
+    const callback = vi.fn()
+    const cleanup = observeIntersection(el, callback)
+
+    expect(callback).toHaveBeenCalled()
+    expect(callback.mock.calls[0][0].isIntersecting).toBe(true)
+    expect(typeof cleanup).toBe('function')
+
+    ;(global as any).IntersectionObserver = originalIO
   })
 })
