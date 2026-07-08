@@ -38,6 +38,27 @@ import {
   lazyLoadImage,
   observeIntersection,
 } from 'atomix-fe/browser';
+import {
+  $,
+  $$,
+  addClass,
+  removeClass,
+  toggleClass,
+  hasClass,
+  getStyle,
+  setStyle,
+  show,
+  hide,
+  isHidden,
+  createElement,
+  append,
+  prepend,
+  empty,
+  setText,
+  getText,
+  setData,
+  getData,
+} from 'atomix-fe/dom';
 
 const emitter = new EventEmitter();
 
@@ -196,6 +217,12 @@ export default function App() {
       <section style={{ marginBottom: '2rem', padding: '1.5rem', border: '1px solid #ddd', borderRadius: '8px' }}>
         <h2 style={{ marginTop: 0 }}>Browser (浏览器工具 - 元素可见性观察)</h2>
         <IntersectionDemo />
+      </section>
+
+      {/* DOM 模块 */}
+      <section style={{ marginBottom: '2rem', padding: '1.5rem', border: '1px solid #ddd', borderRadius: '8px' }}>
+        <h2 style={{ marginTop: 0 }}>DOM (DOM 操作)</h2>
+        <DomDemo />
       </section>
     </div>
   );
@@ -420,6 +447,216 @@ function IntersectionDemo() {
       </div>
       <p style={{ marginTop: '1rem', fontSize: '0.875rem', color: '#888' }}>
         使用方法：<code>observeIntersection(element, (entry) => {'{'}...{'}'}, {'{'} threshold: [0, 0.5, 1] {'}'})</code>
+      </p>
+    </div>
+  );
+}
+
+function DomDemo() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [className, setClassName] = useState('');
+  const [styleValue, setStyleValue] = useState('');
+  const [textContent, setTextContent] = useState('');
+
+  useEffect(() => {
+    if (containerRef.current) {
+      setData(containerRef.current, 'demo-id', 'dom-demo-001');
+    }
+  }, []);
+
+  const handleAddClass = () => {
+    const el = $('#dom-demo-box');
+    if (el && className) {
+      addClass(el, className);
+      setClassName('');
+    }
+  };
+
+  const handleRemoveClass = () => {
+    const el = $('#dom-demo-box');
+    if (el && className) {
+      removeClass(el, className);
+      setClassName('');
+    }
+  };
+
+  const handleToggleClass = () => {
+    const el = $('#dom-demo-box');
+    if (el && className) {
+      toggleClass(el, className);
+      setClassName('');
+    }
+  };
+
+  const handleSetStyle = () => {
+    const el = $('#dom-demo-box');
+    if (el && styleValue) {
+      const [prop, val] = styleValue.split(':');
+      if (prop && val) {
+        setStyle(el, prop.trim(), val.trim());
+        setStyleValue('');
+      }
+    }
+  };
+
+  const handleCreateElement = () => {
+    const container = $('#dom-container');
+    if (container) {
+      const btn = createElement('button', {
+        className: 'created-btn',
+        style: {
+          margin: '0.5rem',
+          padding: '0.5rem 1rem',
+          background: '#2196F3',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer',
+        },
+        dataset: { count: String($$('.created-btn').length + 1) },
+        onclick: () => {
+          const count = getData(btn, 'count');
+          alert(`按钮 ${count} 被点击！`);
+        },
+      });
+      setText(btn, `按钮 ${$$('.created-btn').length + 1}`);
+      append(container, btn);
+    }
+  };
+
+  const handleAppendText = () => {
+    const el = $('#dom-demo-box');
+    if (el && textContent) {
+      append(el, `<span style="color:#4CAF50; margin-left:0.5rem;">${textContent}</span>`);
+      setTextContent('');
+    }
+  };
+
+  const handleClear = () => {
+    const el = $('#dom-demo-box');
+    if (el) {
+      empty(el);
+      setText(el, '点击下方按钮修改此元素');
+    }
+  };
+
+  const handleShowHide = () => {
+    const el = $('#dom-demo-box');
+    if (el) {
+      if (isHidden(el)) {
+        show(el);
+      } else {
+        hide(el);
+      }
+    }
+  };
+
+  return (
+    <div>
+      <div
+        id="dom-container"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '1rem',
+          marginBottom: '1rem',
+        }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div>
+            <label>类名：</label>
+            <input
+              type="text"
+              value={className}
+              onChange={(e) => setClassName(e.target.value)}
+              placeholder="例如: active"
+              style={{ marginLeft: '0.5rem', padding: '0.3rem', width: '120px' }}
+            />
+          </div>
+          <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap' }}>
+            <button onClick={handleAddClass} style={{ padding: '0.3rem 0.6rem', background: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+              addClass
+            </button>
+            <button onClick={handleRemoveClass} style={{ padding: '0.3rem 0.6rem', background: '#f44336', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+              removeClass
+            </button>
+            <button onClick={handleToggleClass} style={{ padding: '0.3rem 0.6rem', background: '#FF9800', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+              toggleClass
+            </button>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div>
+            <label>样式 (prop:value)：</label>
+            <input
+              type="text"
+              value={styleValue}
+              onChange={(e) => setStyleValue(e.target.value)}
+              placeholder="例如: color:red"
+              style={{ marginLeft: '0.5rem', padding: '0.3rem', width: '150px' }}
+            />
+          </div>
+          <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap' }}>
+            <button onClick={handleSetStyle} style={{ padding: '0.3rem 0.6rem', background: '#2196F3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+              setStyle
+            </button>
+            <button onClick={handleShowHide} style={{ padding: '0.3rem 0.6rem', background: '#9C27B0', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+              show/hide
+            </button>
+            <button onClick={handleClear} style={{ padding: '0.3rem 0.6rem', background: '#795548', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+              empty
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
+        <div>
+          <label>追加文本：</label>
+          <input
+            type="text"
+            value={textContent}
+            onChange={(e) => setTextContent(e.target.value)}
+            placeholder="输入要追加的文本"
+            style={{ marginLeft: '0.5rem', padding: '0.3rem', width: '200px' }}
+          />
+          <button onClick={handleAppendText} style={{ marginLeft: '0.5rem', padding: '0.3rem 0.6rem', background: '#00BCD4', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+            append
+          </button>
+        </div>
+        <button onClick={handleCreateElement} style={{ padding: '0.5rem 1rem', background: '#E91E63', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', width: 'fit-content' }}>
+          createElement - 创建按钮
+        </button>
+      </div>
+
+      <div
+        id="dom-demo-box"
+        ref={containerRef}
+        style={{
+          padding: '1.5rem',
+          border: '2px dashed #ddd',
+          borderRadius: '8px',
+          minHeight: '100px',
+          transition: 'all 0.3s ease',
+        }}
+      >
+        点击下方按钮修改此元素
+      </div>
+
+      <div style={{ marginTop: '1rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+        <span style={{ fontSize: '0.875rem', color: '#666' }}>当前类名:</span>
+        <code id="class-list" style={{ background: '#f5f5f5', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.875rem' }}>
+          无
+        </code>
+        <span style={{ fontSize: '0.875rem', color: '#666' }}>数据属性:</span>
+        <code id="data-attr" style={{ background: '#f5f5f5', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.875rem' }}>
+          demo-id: dom-demo-001
+        </code>
+      </div>
+
+      <p style={{ marginTop: '1rem', fontSize: '0.875rem', color: '#888' }}>
+        使用方法：<code>import {'{'} $, $$, addClass, removeClass, toggleClass, createElement {'}'} from 'atomix-fe/dom'</code>
       </p>
     </div>
   );

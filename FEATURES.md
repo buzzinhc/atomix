@@ -1,6 +1,6 @@
 # atomix-fe 功能清单
 
-## 📦 版本：0.6.0
+## 📦 版本：0.7.0
 
 ---
 
@@ -355,3 +355,45 @@
 | clear() | 清空当前存储 | |
 | keys() | 获取所有 key | |
 | size() | 获取存储数量 | |
+
+---
+
+## 17. dom DOM 操作
+
+| 函数 | 说明 | 示例 |
+|------|------|
+| $ | 选择器查询（单个） | $('div') → HTMLElement \| null |
+| $$ | 选择器查询（多个） | $$('.item') → HTMLElement[] |
+| addClass | 添加类名 | addClass(el, 'active') |
+| removeClass | 移除类名 | removeClass(el, 'active') |
+| toggleClass | 切换类名 | toggleClass(el, 'active', force?) |
+| hasClass | 判断类名存在 | hasClass(el, 'active') → boolean |
+| getStyle | 获取计算样式 | getStyle(el, 'color') → string |
+| setStyle | 设置样式 | setStyle(el, 'color', 'red') 或 setStyle(el, { color: 'red' }) |
+| show | 显示元素 | show(el) 或 show(el, 'flex') |
+| hide | 隐藏元素 | hide(el) → display: none |
+| isHidden | 判断是否隐藏 | isHidden(el) → boolean |
+| append | 追加子元素 | append(parent, child, '<span>text</span>') |
+| prepend | 前置子元素 | prepend(parent, child) |
+| remove | 移除元素 | remove(el) |
+| empty | 清空子元素 | empty(parent) |
+| offset | 获取元素偏移 | offset(el) → { top, left, width, height } |
+| scrollIntoView | 滚动到视图 | scrollIntoView(el, { behavior: 'smooth' }) |
+| closest | 查找最近祖先 | closest(el, '.parent') |
+| next | 获取下一个兄弟 | next(el, '.sibling') |
+| prev | 获取上一个兄弟 | prev(el, '.sibling') |
+| siblings | 获取所有兄弟 | siblings(el, '.match') |
+| createElement | 创建元素 | createElement('div', { className: 'test' }) |
+| getText | 获取文本内容 | getText(el) → string |
+| setText | 设置文本内容 | setText(el, 'hello') |
+| getData | 获取数据属性 | getData(el, 'id') → string \| undefined |
+| setData | 设置数据属性 | setData(el, 'id', '123') |
+
+**createElement 选项：**
+
+| 选项 | 说明 | 示例 |
+|------|------|------|
+| className | 类名 | 'test-class' |
+| style | 样式对象 | { color: 'red', fontSize: '16px' } |
+| dataset | 数据属性 | { id: '123', name: 'test' } |
+| ...rest | 元素属性 | type, value, placeholder 等 |
