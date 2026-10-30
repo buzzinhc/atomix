@@ -24,10 +24,22 @@ function deserialize<T>(str: string): T | null {
 }
 
 class Storage {
-  private storage: globalThis.Storage
+  private type: 'local' | 'session'
+  private instance: globalThis.Storage | null = null
 
   constructor(type: 'local' | 'session') {
-    this.storage = type === 'local' ? localStorage : sessionStorage
+    this.type = type
+  }
+
+  private get storage(): globalThis.Storage {
+    if (this.instance === null) {
+      const storage = this.type === 'local' ? globalThis.localStorage : globalThis.sessionStorage
+      if (storage == null) {
+        throw new Error(`atomix-fe storage: ${this.type}Storage is not available in this environment`)
+      }
+      this.instance = storage
+    }
+    return this.instance
   }
 
   set<T>(key: string, value: T, expire?: number): void {

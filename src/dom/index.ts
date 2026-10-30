@@ -28,12 +28,17 @@ export function getStyle(element: HTMLElement, property: string): string {
   return window.getComputedStyle(element).getPropertyValue(property)
 }
 
+function toCssProperty(property: string): string {
+  if (property.startsWith('--')) return property
+  return property.replace(/[A-Z]/g, ch => `-${ch.toLowerCase()}`)
+}
+
 export function setStyle(element: HTMLElement, property: string | Record<string, string>, value?: string): void {
   if (typeof property === 'string' && value != null) {
-    element.style.setProperty(property, value)
+    element.style.setProperty(toCssProperty(property), value)
   } else if (typeof property === 'object') {
     for (const [key, val] of Object.entries(property)) {
-      element.style.setProperty(key, val)
+      element.style.setProperty(toCssProperty(key), val)
     }
   }
 }
@@ -150,7 +155,7 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(
 
     if (dataset) {
       for (const [key, value] of Object.entries(dataset)) {
-        element.dataset[key] = value
+        setData(element, key, value)
       }
     }
 
@@ -172,10 +177,14 @@ export function setText(element: HTMLElement, text: string): void {
   element.textContent = text
 }
 
+function toDatasetKey(key: string): string {
+  return key.replace(/-([a-z])/g, (_, ch: string) => ch.toUpperCase())
+}
+
 export function getData(element: HTMLElement, key: string): string | undefined {
-  return element.dataset[key]
+  return element.dataset[toDatasetKey(key)]
 }
 
 export function setData(element: HTMLElement, key: string, value: string): void {
-  element.dataset[key] = value
+  element.dataset[toDatasetKey(key)] = value
 }
