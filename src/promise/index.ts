@@ -58,15 +58,20 @@ export function any<T>(promises: Promise<T>[]): Promise<T> {
 
 export function debouncePromise<T extends (...args: any[]) => Promise<any>>(fn: T, delay: number): (...args: Parameters<T>) => Promise<ReturnType<T>> {
   let timer: ReturnType<typeof setTimeout> | null = null
+  let waiters: Array<{ resolve: (value: any) => void; reject: (err: any) => void }> = []
   return (...args: Parameters<T>) => {
-    return new Promise((resolve, reject) => {
+    return new Promise<ReturnType<T>>((resolve, reject) => {
+      waiters.push({ resolve: resolve as (value: any) => void, reject })
       if (timer) clearTimeout(timer)
       timer = setTimeout(async () => {
+        const pending = waiters
+        waiters = []
+        timer = null
         try {
           const result = await fn(...args)
-          resolve(result)
+          pending.forEach(waiter => waiter.resolve(result))
         } catch (err) {
-          reject(err)
+          pending.forEach(waiter => waiter.reject(err))
         }
       }, delay)
     })
@@ -103,7 +108,13 @@ export async function parallelLimit<T>(promises: Array<() => Promise<T>>, limit:
     const promise = promiseFn().then(result => {
       results.push(result)
     })
-    executing.push(promise)
+    const tracked = promise.finally(() => {
+      const index = executing.indexOf(tracked)
+      if (index !== -1) {
+        executing.splice(index, 1)
+      }
+    })
+    executing.push(tracked)
     
     if (executing.length >= limit) {
       await Promise.race(executing)

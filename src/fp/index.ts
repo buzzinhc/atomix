@@ -138,7 +138,7 @@ export function retry<T extends (...args: any[]) => any>(
     let lastError: Error | undefined
     for (let i = 0; i < times; i++) {
       try {
-        return fn(...args)
+        return await fn(...args)
       } catch (err) {
         lastError = err as Error
         if (i < times - 1 && delayMs > 0) {
