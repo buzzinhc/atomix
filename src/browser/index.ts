@@ -49,10 +49,11 @@ export function throttle<T extends (...args: any[]) => any>(fn: T, interval: num
 }
 
 export function getCookie(name: string): string | null {
+  const encodedName = encodeURIComponent(name)
   const cookies = document.cookie.split('; ')
   for (const cookie of cookies) {
     const [cookieName, cookieValue] = cookie.split('=')
-    if (cookieName == name) {
+    if (cookieName == encodedName || cookieName == name) {
       return decodeURIComponent(cookieValue)
     }
   }
@@ -77,7 +78,7 @@ export function setCookie(name: string, value: string, options?: { expires?: num
     if (options.domain != null) {
       cookieString += `; domain=${options.domain}`
     }
-    if (options.secure != null) {
+    if (options.secure) {
       cookieString += `; secure`
     }
     if (options.sameSite != null) {

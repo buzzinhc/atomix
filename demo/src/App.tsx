@@ -460,7 +460,7 @@ function DomDemo() {
 
   useEffect(() => {
     if (containerRef.current) {
-      setData(containerRef.current, 'demo-id', 'dom-demo-001');
+      setData(containerRef.current, 'demoId', 'dom-demo-001');
     }
   }, []);
 

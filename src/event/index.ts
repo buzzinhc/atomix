@@ -51,8 +51,8 @@ export class EventEmitter {
     listeners.forEach(listener => listener.handler(data))
 
     const onceListeners = this.onceEvents.get(event) || []
-    onceListeners.forEach(listener => listener.handler(data))
     this.onceEvents.delete(event)
+    onceListeners.forEach(listener => listener.handler(data))
   }
 
   clear(event?: string): void {
@@ -107,12 +107,13 @@ export function createOnceEmitter<T>(): {
   fired: boolean
 } {
   let fired = false
+  let lastData: T | undefined
   const handlers: Array<EventHandler<T>> = []
 
   return {
     on(handler: EventHandler<T>) {
       if (fired) {
-        handler(undefined as T)
+        handler(lastData as T)
         return () => {}
       }
       handlers.push(handler)
@@ -124,6 +125,7 @@ export function createOnceEmitter<T>(): {
     emit(data: T) {
       if (fired) return
       fired = true
+      lastData = data
       handlers.forEach(handler => handler(data))
       handlers.length = 0
     },

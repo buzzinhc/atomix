@@ -36,7 +36,13 @@ export function chunk<T>(arr: T[], size: number): T[][] {
 export function groupBy<T>(arr: T[], keyFn: (item: T) => string): Record<string, T[]> {
   return arr.reduce<Record<string, T[]>>((acc, item) => {
     const key = keyFn(item)
-    if (!acc[key]) acc[key] = []
+    if (!Object.prototype.hasOwnProperty.call(acc, key)) {
+      if (key === '__proto__') {
+        Object.defineProperty(acc, key, { value: [], writable: true, enumerable: true, configurable: true })
+      } else {
+        acc[key] = []
+      }
+    }
     acc[key].push(item)
     return acc
   }, {})
