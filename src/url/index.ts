@@ -26,8 +26,11 @@ export function stringifyQuery(obj: Record<string, any>): string {
 export function addQuery(url: string, params: Record<string, any>): string {
   const queryString = stringifyQuery(params)
   if (!queryString) return url
-  const separator = url.includes('?') ? '&' : '?'
-  return `${url}${separator}${queryString}`
+  const hashIdx = url.indexOf('#')
+  const base = hashIdx == -1 ? url : url.slice(0, hashIdx)
+  const hashStr = hashIdx == -1 ? '' : url.slice(hashIdx)
+  const separator = base.includes('?') ? '&' : '?'
+  return `${base}${separator}${queryString}${hashStr}`
 }
 
 export function removeQuery(url: string, keys: string[]): string {
