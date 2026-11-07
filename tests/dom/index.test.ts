@@ -28,7 +28,7 @@ import {
   setData,
 } from '../../src/dom'
 
-describe.skip('$', () => {
+describe('$', () => {
   beforeEach(() => {
     document.body.innerHTML = '<div id="test">hello</div>'
   })
@@ -52,7 +52,7 @@ describe.skip('$', () => {
   })
 })
 
-describe.skip('$$', () => {
+describe('$$', () => {
   beforeEach(() => {
     document.body.innerHTML = '<div class="item">1</div><div class="item">2</div><div class="item">3</div>'
   })
@@ -69,7 +69,7 @@ describe.skip('$$', () => {
   })
 })
 
-describe.skip('addClass', () => {
+describe('addClass', () => {
   it('should add single class', () => {
     const el = document.createElement('div')
     addClass(el, 'test')
@@ -91,7 +91,7 @@ describe.skip('addClass', () => {
   })
 })
 
-describe.skip('removeClass', () => {
+describe('removeClass', () => {
   it('should remove single class', () => {
     const el = document.createElement('div')
     el.classList.add('test')
@@ -116,7 +116,7 @@ describe.skip('removeClass', () => {
   })
 })
 
-describe.skip('toggleClass', () => {
+describe('toggleClass', () => {
   it('should toggle class', () => {
     const el = document.createElement('div')
     toggleClass(el, 'test')
@@ -143,7 +143,7 @@ describe.skip('toggleClass', () => {
   })
 })
 
-describe.skip('hasClass', () => {
+describe('hasClass', () => {
   it('should return true when class exists', () => {
     const el = document.createElement('div')
     el.classList.add('test')
@@ -156,7 +156,7 @@ describe.skip('hasClass', () => {
   })
 })
 
-describe.skip('getStyle', () => {
+describe('getStyle', () => {
   it('should return computed style', () => {
     const el = document.createElement('div')
     el.style.color = 'red'
@@ -166,7 +166,7 @@ describe.skip('getStyle', () => {
   })
 })
 
-describe.skip('setStyle', () => {
+describe('setStyle', () => {
   it('should set single style property', () => {
     const el = document.createElement('div')
     setStyle(el, 'color', 'red')
@@ -181,7 +181,7 @@ describe.skip('setStyle', () => {
   })
 })
 
-describe.skip('show', () => {
+describe('show', () => {
   it('should remove display none', () => {
     const el = document.createElement('div')
     el.style.display = 'none'
@@ -197,7 +197,7 @@ describe.skip('show', () => {
   })
 })
 
-describe.skip('hide', () => {
+describe('hide', () => {
   it('should set display none', () => {
     const el = document.createElement('div')
     hide(el)
@@ -205,7 +205,7 @@ describe.skip('hide', () => {
   })
 })
 
-describe.skip('isHidden', () => {
+describe('isHidden', () => {
   it('should return true when hidden', () => {
     const el = document.createElement('div')
     el.style.display = 'none'
@@ -222,7 +222,7 @@ describe.skip('isHidden', () => {
   })
 })
 
-describe.skip('append', () => {
+describe('append', () => {
   it('should append element', () => {
     const parent = document.createElement('div')
     const child = document.createElement('span')
@@ -247,7 +247,7 @@ describe.skip('append', () => {
   })
 })
 
-describe.skip('prepend', () => {
+describe('prepend', () => {
   it('should prepend element', () => {
     const parent = document.createElement('div')
     const child1 = document.createElement('span')
@@ -267,7 +267,7 @@ describe.skip('prepend', () => {
   })
 })
 
-describe.skip('remove', () => {
+describe('remove', () => {
   it('should remove element from DOM', () => {
     const el = document.createElement('div')
     document.body.appendChild(el)
@@ -277,7 +277,7 @@ describe.skip('remove', () => {
   })
 })
 
-describe.skip('empty', () => {
+describe('empty', () => {
   it('should remove all children', () => {
     const el = document.createElement('div')
     el.innerHTML = '<span>1</span><span>2</span>'
@@ -287,7 +287,7 @@ describe.skip('empty', () => {
   })
 })
 
-describe.skip('offset', () => {
+describe('offset', () => {
   it('should return offset object', () => {
     const el = document.createElement('div')
     el.style.width = '100px'
@@ -302,7 +302,7 @@ describe.skip('offset', () => {
   })
 })
 
-describe.skip('scrollIntoView', () => {
+describe('scrollIntoView', () => {
   it('should call scrollIntoView', () => {
     const el = document.createElement('div')
     const spy = vi.spyOn(el, 'scrollIntoView')
@@ -318,7 +318,7 @@ describe.skip('scrollIntoView', () => {
   })
 })
 
-describe.skip('closest', () => {
+describe('closest', () => {
   it('should find closest matching ancestor', () => {
     document.body.innerHTML = '<div class="grandparent"><div class="parent"><span id="child">text</span></div></div>'
     const child = $('#child')!
@@ -334,7 +334,7 @@ describe.skip('closest', () => {
   })
 })
 
-describe.skip('next', () => {
+describe('next', () => {
   it('should return next sibling', () => {
     document.body.innerHTML = '<div id="first">1</div><div id="second">2</div>'
     const first = $('#first')!
@@ -357,7 +357,7 @@ describe.skip('next', () => {
   })
 })
 
-describe.skip('prev', () => {
+describe('prev', () => {
   it('should return previous sibling', () => {
     document.body.innerHTML = '<div id="first">1</div><div id="second">2</div>'
     const second = $('#second')!
@@ -380,7 +380,7 @@ describe.skip('prev', () => {
   })
 })
 
-describe.skip('siblings', () => {
+describe('siblings', () => {
   it('should return all siblings', () => {
     document.body.innerHTML = '<div id="parent"><div>1</div><div id="current">2</div><div>3</div></div>'
     const current = $('#current')!
@@ -404,7 +404,7 @@ describe.skip('siblings', () => {
   })
 })
 
-describe.skip('createElement', () => {
+describe('createElement', () => {
   it('should create element with tag name', () => {
     const el = createElement('div')
     expect(el.tagName).toBe('DIV')
@@ -435,7 +435,7 @@ describe.skip('createElement', () => {
   })
 })
 
-describe.skip('getText', () => {
+describe('getText', () => {
   it('should return text content', () => {
     const el = document.createElement('div')
     el.textContent = 'hello world'
@@ -448,7 +448,7 @@ describe.skip('getText', () => {
   })
 })
 
-describe.skip('setText', () => {
+describe('setText', () => {
   it('should set text content', () => {
     const el = document.createElement('div')
     setText(el, 'hello world')
@@ -456,7 +456,7 @@ describe.skip('setText', () => {
   })
 })
 
-describe.skip('getData', () => {
+describe('getData', () => {
   it('should return data attribute value', () => {
     const el = document.createElement('div')
     el.dataset.test = 'value'
@@ -469,7 +469,7 @@ describe.skip('getData', () => {
   })
 })
 
-describe.skip('setData', () => {
+describe('setData', () => {
   it('should set data attribute', () => {
     const el = document.createElement('div')
     setData(el, 'test', 'value')

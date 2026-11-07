@@ -166,7 +166,19 @@ describe('throttle', () => {
   })
 })
 
-describe.skip('getCookie', () => {
+describe('getCookie', () => {
+  beforeEach(() => {
+    const cookies = document.cookie.split(';')
+    for (const cookie of cookies) {
+      const eqPos = cookie.indexOf('=')
+      const name = eqPos > -1 ? cookie.slice(0, eqPos).trim() : cookie.trim()
+      if (name) {
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`
+      }
+    }
+  })
+
   it('should return cookie value by name', () => {
     document.cookie = 'token=abc123'
     expect(getCookie('token')).toBe('abc123')
@@ -177,7 +189,7 @@ describe.skip('getCookie', () => {
   })
 })
 
-describe.skip('setCookie', () => {
+describe('setCookie', () => {
   it('should set a cookie', () => {
     setCookie('name', 'value')
     expect(document.cookie).toContain('name=value')
@@ -189,7 +201,19 @@ describe.skip('setCookie', () => {
   })
 })
 
-describe.skip('removeCookie', () => {
+describe('removeCookie', () => {
+  beforeEach(() => {
+    const cookies = document.cookie.split(';')
+    for (const cookie of cookies) {
+      const eqPos = cookie.indexOf('=')
+      const name = eqPos > -1 ? cookie.slice(0, eqPos).trim() : cookie.trim()
+      if (name) {
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`
+      }
+    }
+  })
+
   it('should remove a cookie', () => {
     document.cookie = 'name=value'
     removeCookie('name')
@@ -278,7 +302,7 @@ describe('removeStorage', () => {
   })
 })
 
-describe.skip('copyToClipboard', () => {
+describe('copyToClipboard', () => {
   it('should use navigator.clipboard if available', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     Object.defineProperty(navigator, 'clipboard', {
@@ -300,19 +324,19 @@ describe.skip('copyToClipboard', () => {
   })
 })
 
-describe.skip('getScrollPosition', () => {
+describe('getScrollPosition', () => {
   it('should return scroll position', () => {
     expect(getScrollPosition()).toEqual({ x: 0, y: 0 })
   })
 })
 
-describe.skip('isMobile', () => {
+describe('isMobile', () => {
   it('should detect mobile device', () => {
     expect(typeof isMobile()).toBe('boolean')
   })
 })
 
-describe.skip('getBrowserInfo', () => {
+describe('getBrowserInfo', () => {
   it('should return browser name and version', () => {
     const info = getBrowserInfo()
     expect(info).toHaveProperty('name')
@@ -320,7 +344,7 @@ describe.skip('getBrowserInfo', () => {
   })
 })
 
-describe.skip('lazyLoadImage', () => {
+describe('lazyLoadImage', () => {
   beforeEach(() => {
     document.body.innerHTML = ''
   })
@@ -410,7 +434,7 @@ describe.skip('lazyLoadImage', () => {
   })
 })
 
-describe.skip('observeIntersection', () => {
+describe('observeIntersection', () => {
   beforeEach(() => {
     document.body.innerHTML = ''
   })

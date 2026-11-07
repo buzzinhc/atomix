@@ -56,32 +56,26 @@ const defaultCurrencyOptions: FormatCurrencyOptions = {
   precision: 'max'
 }
 
-function getDecimals(num: number, mode: 'min' | 'max' | number, explicitDecimals?: number): number {
+function getDecimals(num: number, mode: 'min' | 'max' | number, explicitDecimals?: number, fallbackDecimals: number = 2): number {
+  if (explicitDecimals !== undefined) {
+    return explicitDecimals
+  }
   if (typeof mode === 'number') {
     return mode
   }
   if (mode === 'min') {
-    return num % 1 === 0 ? 0 : 2
+    return num % 1 === 0 ? 0 : fallbackDecimals
   }
   // 'max' mode
-  if (explicitDecimals !== undefined) {
-    return explicitDecimals
-  }
   const actualDecimals = num.toString().split('.')[1]?.length ?? 0
-  return Math.max(actualDecimals, 2)
+  return Math.max(actualDecimals, fallbackDecimals)
 }
 
 export function formatCurrency(amount: number, options: FormatCurrencyOptions = {}): string {
   const { decimals: explicitDecimals, ...restOptions } = options
   const opts = { ...defaultCurrencyOptions, ...restOptions } as Required<FormatCurrencyOptions>
 
-  const decimals = explicitDecimals !== undefined
-    ? explicitDecimals
-    : (typeof opts.precision === 'number'
-        ? opts.precision
-        : opts.precision === 'min'
-          ? (amount % 1 === 0 ? 0 : 2)
-          : Math.max(amount.toString().split('.')[1]?.length ?? 0, opts.decimals))
+  const decimals = getDecimals(amount, opts.precision, explicitDecimals, opts.decimals)
 
   const fixedAmount = Number(amount.toFixed(decimals))
   const parts = fixedAmount.toFixed(decimals).split('.')

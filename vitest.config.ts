@@ -3,7 +3,12 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     globals: true,
-    environment: 'node',
+    environment: 'happy-dom',
+    environmentOptions: {
+      happyDom: {
+        url: 'https://localhost:8080',
+      },
+    },
     include: ['tests/**/*.test.ts'],
     coverage: {
       provider: 'v8',

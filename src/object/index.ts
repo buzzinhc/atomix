@@ -38,7 +38,9 @@ export function deepMerge<T extends Record<string, any>>(target: T, ...sources: 
 }
 
 function isPlainObject(val: any): val is Record<string, any> {
-  return val != null && typeof val == 'object' && !Array.isArray(val) && Object.getPrototypeOf(val) == Object.prototype
+  if (val == null || typeof val !== 'object' || Array.isArray(val)) return false
+  const proto = Object.getPrototypeOf(val)
+  return proto === null || proto === Object.prototype
 }
 
 export function pick<T extends Record<string, any>, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {

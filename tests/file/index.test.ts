@@ -111,7 +111,7 @@ describe('isImage', () => {
   })
 })
 
-describe.skip('downloadFile', () => {
+describe('downloadFile', () => {
   it('should create download link for string data', () => {
     downloadFile('hello world', 'test.txt', 'text/plain')
   })
@@ -127,7 +127,7 @@ describe.skip('downloadFile', () => {
   })
 })
 
-describe.skip('readFileAsText', () => {
+describe('readFileAsText', () => {
   it('should read file as text', async () => {
     const file = new File(['hello world'], 'test.txt', { type: 'text/plain' })
     const result = await readFileAsText(file)
@@ -135,7 +135,7 @@ describe.skip('readFileAsText', () => {
   })
 })
 
-describe.skip('readFileAsDataURL', () => {
+describe('readFileAsDataURL', () => {
   it('should read file as data URL', async () => {
     const file = new File(['test'], 'test.txt', { type: 'text/plain' })
     const result = await readFileAsDataURL(file)

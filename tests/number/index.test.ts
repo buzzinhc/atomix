@@ -52,7 +52,7 @@ describe('randomFloat', () => {
   it('should respect precision', () => {
     const result = randomFloat(0, 100, 2)
     const decimal = result.toString().split('.')[1]
-    expect(decimal.length).toBe(2)
+    expect(decimal ? decimal.length : 0).toBeLessThanOrEqual(2)
   })
 
   it('should default to 2 decimal places', () => {

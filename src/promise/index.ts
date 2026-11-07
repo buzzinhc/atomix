@@ -101,12 +101,15 @@ export async function waterfall<T>(fns: Array<(prev: T | undefined) => Promise<T
 }
 
 export async function parallelLimit<T>(promises: Array<() => Promise<T>>, limit: number): Promise<T[]> {
-  const results: T[] = []
+  if (promises.length === 0) return []
+  const safeLimit = Math.max(1, limit)
+  const results: T[] = new Array(promises.length)
   const executing: Promise<void>[] = []
   
-  for (const promiseFn of promises) {
+  for (let i = 0; i < promises.length; i++) {
+    const promiseFn = promises[i]
     const promise = promiseFn().then(result => {
-      results.push(result)
+      results[i] = result
     })
     const tracked = promise.finally(() => {
       const index = executing.indexOf(tracked)
@@ -116,7 +119,7 @@ export async function parallelLimit<T>(promises: Array<() => Promise<T>>, limit:
     })
     executing.push(tracked)
     
-    if (executing.length >= limit) {
+    if (executing.length >= safeLimit) {
       await Promise.race(executing)
     }
   }
@@ -125,7 +128,7 @@ export async function parallelLimit<T>(promises: Array<() => Promise<T>>, limit:
   return results
 }
 
-export function withRetry<T>(fn: () => Promise<T>, options: { maxRetries?: number; delayMs?: number; onRetry?: (attempt: number, error: Error) => void }): Promise<T> {
+export function withRetry<T>(fn: () => Promise<T>, options: { maxRetries?: number; delayMs?: number; onRetry?: (attempt: number, error: Error) => void } = {}): Promise<T> {
   const { maxRetries = 3, delayMs = 1000, onRetry } = options
   let attempt = 0
   

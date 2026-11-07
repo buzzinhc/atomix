@@ -50,11 +50,31 @@ class Storage {
   get<T>(key: string): T | null {
     const str = this.storage.getItem(key)
     if (str === null) return null
-    return deserialize<T>(str)
+    try {
+      const data = JSON.parse(str) as StorageData<T>
+      if (isExpired(data)) {
+        this.storage.removeItem(key)
+        return null
+      }
+      return data.value
+    } catch {
+      return null
+    }
   }
 
   has(key: string): boolean {
-    return this.storage.getItem(key) !== null
+    const str = this.storage.getItem(key)
+    if (str === null) return false
+    try {
+      const data = JSON.parse(str) as StorageData
+      if (isExpired(data)) {
+        this.storage.removeItem(key)
+        return false
+      }
+      return true
+    } catch {
+      return false
+    }
   }
 
   remove(key: string): void {

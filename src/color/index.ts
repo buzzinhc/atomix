@@ -246,7 +246,7 @@ export function mix(color1: string, color2: string, weight: number = 0.5): strin
 }
 
 export function randomHex(): string {
-  return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0').toUpperCase()
+  return '#' + Math.floor(Math.random() * 16777216).toString(16).padStart(6, '0').toUpperCase()
 }
 
 export function randomRgb(): RGB {

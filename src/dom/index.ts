@@ -66,13 +66,14 @@ export function append(element: HTMLElement, ...children: Array<HTMLElement | st
 }
 
 export function prepend(element: HTMLElement, ...children: Array<HTMLElement | string>): void {
-  children.forEach((child) => {
+  for (let i = children.length - 1; i >= 0; i--) {
+    const child = children[i]
     if (typeof child === 'string') {
       element.insertAdjacentHTML('afterbegin', child)
     } else {
       element.insertBefore(child, element.firstChild)
     }
-  })
+  }
 }
 
 export function remove(element: HTMLElement): void {

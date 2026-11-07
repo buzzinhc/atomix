@@ -90,6 +90,9 @@ export function setCookie(name: string, value: string, options?: { expires?: num
 
 export function removeCookie(name: string, path?: string): void {
   setCookie(name, '', { expires: new Date(0), path })
+  if (path === undefined) {
+    setCookie(name, '', { expires: new Date(0), path: '/' })
+  }
 }
 
 export function getStorage(key: string, storage?: Storage): any {
